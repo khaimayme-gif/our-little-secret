@@ -740,13 +740,13 @@ html, body {
     flex-direction: column;
     gap: 20px;
   }
-  .pincode-left { flex: 0 0 40%; }
-  .pincode-right { flex: 1; width: 100%; }
+  .pincode-left { flex: 0 0 40%; height: auto; }
+  .pincode-right { flex: 1; width: 100%; height: auto; overflow-y: auto; }
   .speech-bubble { max-width: 80vw; }
   .keypad { grid-template-columns: repeat(3, 60px); }
   .key { width: 60px; height: 60px; font-size: 16px; }
   .welcome-title { white-space: pre-line; font-size: 24px; }
-  .gift-row { gap: 30px; }
+  .gift-row { gap: 24px; flex-wrap: wrap; justify-content: center; }
   .gifts-title { font-size: 22px; }
   .giftbox { width: 90px; }
   .letter-page p { font-size: 13px; }
