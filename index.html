@@ -2,23 +2,22 @@
 <!--
   BIRTHDAY GIFT SITE — customization guide
 
-  1. Pincode: change PIN_CODE near the top of the <script> section (currently "1111").
-  2. Giftbox images: replace images/gift-letter.png, gift-memories.png, gift-song.png
-     with your own pictures (keep the same filenames, or update the src in the HTML).
-  3. Memory photos: replace images/memory1.jpeg, memory2.jpeg, memory3.jpeg.
-  4. Letter wish text: edit the LETTER_TEXT constant in the <script> section.
-  5. Song: replace the video ID "dQw4w9WgXcQ" in the iframe src (screen-song section)
-     with your own YouTube video ID.
-  6. Character sprites: the girl/boy figures are drawn with CSS (.pixel-girl, .pixel-boy).
-     Swap these for <img> tags if you want to use exact character art instead.
+  1. Background Image: place your pixel landscape image in images/background.jpeg (or change the URL in the .sky CSS rule).
+  2. Pincode: change PIN_CODE near the top of the <script> section (currently "5201").
+  3. Giftbox images: replace images/giftbox.png with your own pictures if desired.
+  4. Memory photos: replace images/memory1.jpeg, memory2.jpeg, memory3.jpeg.
+  5. Letter wish text: edit the LETTER_TEXT constant in the <script> section.
+  6. Song: replace the video ID in the iframe src (screen-song section) with your own YouTube video ID.
+  7. Floating Player: Positioned at top-right, works continuously across all screens.
 -->
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Gift For You</title>
+<title>给你的礼物</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+
 <style>
 * {
   margin: 0;
@@ -42,41 +41,52 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Press Start 2P', 'ZCOOL KuaiLe', monospace;
   background: #1a1330;
 }
 
+/* ---------- FLOATING TOP-RIGHT AUDIO BUTTON ---------- */
+.floating-audio-control {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.floating-audio-btn {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(180deg, var(--pink-hot), #e0508a);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  font-family: 'Press Start 2P', 'ZCOOL KuaiLe', monospace;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 0 2px var(--purple-deep);
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.floating-audio-btn:hover {
+  transform: scale(1.08);
+}
+
+.floating-audio-btn:active {
+  transform: scale(0.95);
+}
+
+/* ---------- FULLSCREEN BACKGROUND IMAGE ---------- */
 .sky {
   position: fixed;
   inset: 0;
-  background: linear-gradient(180deg, #5b4b8a 0%, #8b6bb0 30%, #d982a8 60%, #ffab8a 100%);
+  background: url('images/background.jpeg') no-repeat center center / cover;
   z-index: 0;
-}
-
-.stars {
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(2px 2px at 20% 15%, #fff 100%, transparent),
-    radial-gradient(2px 2px at 60% 10%, #fff 100%, transparent),
-    radial-gradient(3px 3px at 85% 20%, #fff 100%, transparent),
-    radial-gradient(2px 2px at 40% 30%, #fff 100%, transparent),
-    radial-gradient(2px 2px at 75% 40%, #fff 100%, transparent),
-    radial-gradient(3px 3px at 10% 45%, #fff 100%, transparent);
-  opacity: 0.9;
-}
-
-.clouds-bg {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 35%;
-  background:
-    radial-gradient(ellipse 120px 40px at 15% 100%, #fff 60%, transparent 61%),
-    radial-gradient(ellipse 160px 50px at 50% 100%, #fff 60%, transparent 61%),
-    radial-gradient(ellipse 140px 45px at 85% 100%, #fff 60%, transparent 61%);
-  opacity: 0.85;
 }
 
 .screen {
@@ -99,18 +109,6 @@ html, body {
   padding: 0 8vw;
 }
 
-.cloud-platform {
-  position: absolute;
-  bottom: 10%;
-  left: 10%;
-  width: 220px;
-  height: 60px;
-  background:
-    radial-gradient(ellipse 60px 25px at 20% 100%, #fff 60%, transparent 61%),
-    radial-gradient(ellipse 80px 30px at 55% 100%, #fff 60%, transparent 61%),
-    radial-gradient(ellipse 60px 25px at 90% 100%, #fff 60%, transparent 61%);
-}
-
 .character {
   position: relative;
   z-index: 2;
@@ -121,72 +119,6 @@ html, body {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
-
-.pixel-girl {
-  width: 110px;
-  height: 160px;
-  position: relative;
-}
-
-.pixel-girl::before {
-  /* hair */
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 5px;
-  width: 100px;
-  height: 75px;
-  background: #2b2233;
-  border-radius: 50% 50% 20% 20% / 60% 60% 10% 10%;
-}
-
-.pixel-girl::after {
-  /* body/coat */
-  content: "";
-  position: absolute;
-  top: 68px;
-  left: 12px;
-  width: 86px;
-  height: 92px;
-  background: #f5f1ea;
-  border-radius: 10px 10px 6px 6px;
-  box-shadow: inset 0 0 0 4px #e0d9cc;
-}
-
-.pixel-boy {
-  width: 110px;
-  height: 160px;
-  position: relative;
-}
-
-.pixel-boy::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 10px;
-  width: 90px;
-  height: 55px;
-  background: #4a3324;
-  border-radius: 50% 50% 30% 30% / 70% 70% 20% 20%;
-}
-
-.pixel-boy::after {
-  content: "";
-  position: absolute;
-  top: 50px;
-  left: 15px;
-  width: 80px;
-  height: 110px;
-  background: #2e2a45;
-  border-radius: 8px 8px 4px 4px;
-}
-
-.character-pair {
-  display: flex;
-  align-items: flex-end;
-  gap: -10px;
-}
-.character-pair .pixel-boy { margin-right: -20px; }
 
 .speech-bubble {
   position: relative;
@@ -231,20 +163,18 @@ html, body {
   justify-content: center;
 }
 
-.cloud-platform.small {
-  bottom: 25%;
-  width: 180px;
-}
-
 .character-pair {
   position: relative;
   z-index: 2;
+  display: flex;
+  align-items: flex-end;
 }
 
 .pincode-right {
   flex: 1;
   height: 100%;
-  background: var(--pink-pale);
+  background: rgba(255, 217, 232, 0.85);
+  backdrop-filter: blur(4px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -311,11 +241,10 @@ html, body {
   height: 70px;
   border: none;
   cursor: pointer;
-  background:
-    linear-gradient(180deg, var(--pink-hot), #e0508a);
+  background: linear-gradient(180deg, var(--pink-hot), #e0508a);
   clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 70% 100%, 30% 100%, 0% 60%, 10% 20%);
   color: #fff;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Press Start 2P', 'ZCOOL KuaiLe', monospace;
   font-size: 18px;
   display: flex;
   align-items: center;
@@ -351,7 +280,8 @@ html, body {
 
 .welcome-card {
   position: relative;
-  background: rgba(180, 90, 140, 0.55);
+  background: rgba(180, 90, 140, 0.65);
+  backdrop-filter: blur(4px);
   border-radius: 24px;
   padding: 40px 34px;
   display: flex;
@@ -393,7 +323,7 @@ html, body {
   background: linear-gradient(180deg, #a78bd9, #7b5fc7);
   border: 4px solid #5b3fa0;
   color: #fff;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Press Start 2P', 'ZCOOL KuaiLe', monospace;
   font-size: 18px;
   padding: 14px 36px;
   cursor: pointer;
@@ -423,7 +353,7 @@ html, body {
 .next-arrow {
   position: absolute;
   top: 6%;
-  right: 6%;
+  right: 80px;
   width: 0;
   height: 0;
   border-top: 16px solid transparent;
@@ -494,7 +424,8 @@ html, body {
 
 /* ---------- SCREEN 6: ENVELOPE OPENING ---------- */
 #screen-envelope {
-  background: #ff5f96;
+  background: rgba(255, 95, 150, 0.85);
+  backdrop-filter: blur(4px);
   overflow: hidden;
 }
 
@@ -595,6 +526,9 @@ html, body {
   width: 100%;
   padding: 40px 36px;
   position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .letter-page p {
@@ -642,6 +576,7 @@ html, body {
   width: 220px;
   background: #fff;
   border: 4px solid var(--ink);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
 .photo-window .window-bar {
@@ -668,8 +603,6 @@ html, body {
 }
 
 /* ---------- SCREEN 9: SONG FOR YOU ---------- */
-
-
 .song-title {
   color: var(--pink-hot);
   font-size: 40px;
@@ -702,7 +635,7 @@ html, body {
 }
 
 .pixel-pig-img {
-  width: 220px;
+  width: 100px;
   height: auto;
 }
 
@@ -712,6 +645,7 @@ html, body {
   background: #cdb8e8;
   border: 5px solid #6b4f9e;
   z-index: 2;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .player-titlebar {
@@ -788,8 +722,6 @@ html, body {
   font-size: 18px;
 }
 
-.pixel-pig-img { width: 100px; }
-
 .player-buttons .play-pause {
   width: 44px;
   height: 44px;
@@ -824,46 +756,54 @@ html, body {
   .photo-window img { height: 42vw; }
   .photos-title { font-size: 18px; }
   .song-title { font-size: 20px; }
-  .song-left {
-  flex-basis: 100%;
-}
+  .song-left { flex-basis: 100%; }
+  .floating-audio-control { top: 10px; right: 10px; }
+  .floating-audio-btn { width: 38px; height: 38px; font-size: 14px; }
 }
 </style>
 </head>
 <body>
 
-<div class="sky">
-  <div class="stars"></div>
-  <div class="clouds-bg"></div>
+<!-- FLOATING TOP-RIGHT AUDIO BUTTON -->
+<div class="floating-audio-control">
+  <button id="global-bgm-btn" class="floating-audio-btn" aria-label="Toggle music">▶</button>
 </div>
+
+<!-- Background Audio -->
+<audio id="bgm-audio" loop preload="auto">
+  <source src="audio/bgm.mp3" type="audio/mpeg">
+  <source src="audio/bgm.ogg" type="audio/ogg">
+</audio>
+
+<!-- FULLSCREEN BACKGROUND IMAGE -->
+<div class="sky"></div>
 
 <!-- SCREEN 1: Intro -->
 <section id="screen-intro" class="screen active">
-  <div class="cloud-platform"></div>
   <div class="character">
     <img class="pixel-girl-img" src="images/pixel-girl.png" alt="">
   </div>
   <div class="speech-bubble">
-    <p id="intro-text">Enjoy your birthday!!!!</p>
+    <p id="intro-text">祝你生日快乐！！！</p>
   </div>
 </section>
 
 <!-- SCREEN 2: Pincode -->
-<!-- SCREEN 2: Pincode -->
 <section id="screen-pincode" class="screen">
   <div class="pincode-left">
-    <div class="cloud-platform small"></div>
-    <img class="couple-img" src="images/pixel-couple.png" alt="">
+    <div class="character-pair">
+      <img class="couple-img" src="images/pixel-couple.png" alt="">
+    </div>
   </div>
   <div class="pincode-right">
-    <h1 class="pin-title">Guess the<br>password</h1>
+    <h1 class="pin-title">请输入密码</h1>
     <div class="pin-dots">
       <div class="pin-dot" data-index="0"></div>
       <div class="pin-dot" data-index="1"></div>
       <div class="pin-dot" data-index="2"></div>
       <div class="pin-dot" data-index="3"></div>
     </div>
-    <div class="pin-error" id="pin-error">Wrong password, try again!</div>
+    <div class="pin-error" id="pin-error">密码错误，请重新输入！</div>
     <div class="keypad">
       <button class="key" data-key="1">1</button>
       <button class="key" data-key="2">2</button>
@@ -895,44 +835,43 @@ html, body {
     </div>
   </div>
   <div class="welcome-col">
-    <h1 class="welcome-title" id="welcome-title-text">HAPPY<br>BIRTHDAY<br>LOVE!</h1>
-    <button class="start-btn" id="start-btn">START</button>
+    <h1 class="welcome-title" id="welcome-title-text">生日快乐我的<br>挚爱！</h1>
+    <button class="start-btn" id="start-btn">开始</button>
   </div>
 </section>
 
 <!-- SCREEN 4: Chathead -->
 <section id="screen-chathead" class="screen">
   <div class="next-arrow"></div>
-  <div class="cloud-platform"></div>
   <div class="character">
     <img class="pixel-girl-img" src="images/pixel-girl.png" alt="">
   </div>
   <div class="speech-bubble">
-    <p id="chathead-text">hi love, i prepared this gift just for you</p>
+    <p id="chathead-text">宝贝，这份礼物 <br> 是我特意为你准备的 <br> ♡</p>
   </div>
 </section>
 
 <!-- SCREEN 5: Gift Selection -->
 <section id="screen-gifts" class="screen">
-  <h1 class="gifts-title">Choose Your<br>Gifts</h1>
+  <h1 class="gifts-title">选择你的礼物</h1>
   <div class="gift-row">
     <div class="gift-col">
       <div class="giftbox" data-gift="letter">
-        <img src="images/giftbox.png" alt="A letter gift box">
+        <img src="images/giftbox.png" alt="信件礼物盒">
       </div>
-      <div class="gift-label">A Letter</div>
+      <div class="gift-label">一封信 -</div>
     </div>
     <div class="gift-col">
       <div class="giftbox" data-gift="photos">
-        <img src="images/giftbox.png" alt="Photo memories gift box">
+        <img src="images/giftbox.png" alt="回忆相册礼物盒">
       </div>
-      <div class="gift-label">Memories</div>
+      <div class="gift-label">回忆瞬间 -</div>
     </div>
     <div class="gift-col">
       <div class="giftbox" data-gift="song">
-        <img src="images/giftbox.png" alt="A song gift box">
+        <img src="images/giftbox.png" alt="音乐礼物盒">
       </div>
-      <div class="gift-label">A Song</div>
+      <div class="gift-label">一首歌 -</div>
     </div>
   </div>
 </section>
@@ -943,7 +882,7 @@ html, body {
     <div class="flap-bottom-left"></div>
     <div class="flap-bottom-right"></div>
     <div class="letter-card" id="letter-card">
-      <p id="letter-card-text">A letter for you</p>
+      <p id="letter-card-text">写给你的信</p>
     </div>
     <div class="heart-seal" id="heart-seal"></div>
   </div>
@@ -951,7 +890,7 @@ html, body {
 
 <!-- SCREEN 7: Letter Content -->
 <section id="screen-letter" class="screen">
-  <div class="back-link" id="back-to-gifts">‹ back to gifts</div>
+  <div class="back-link" id="back-to-gifts">‹ 返回礼物</div>
   <div class="letter-page">
     <p id="letter-text"></p>
   </div>
@@ -959,35 +898,35 @@ html, body {
 
 <!-- SCREEN 8: Photo Memories -->
 <section id="screen-photos" class="screen">
-  <div class="back-link" id="back-to-gifts-2">‹ back to gifts</div>
-  <h1 class="photos-title">Our Memories</h1>
+  <div class="back-link" id="back-to-gifts-2">‹ 返回礼物</div>
+  <h1 class="photos-title">我们的回忆</h1>
   <div class="photos-row">
     <div class="photo-window">
       <div class="window-bar"><span></span><span></span><span></span></div>
-      <img src="images/memory1.jpeg" alt="Memory 1">
+      <img src="images/memory1.jpeg" alt="回忆照片一">
     </div>
     <div class="photo-window">
       <div class="window-bar"><span></span><span></span><span></span></div>
-      <img src="images/memory2.jpeg" alt="Memory 2">
+      <img src="images/memory2.jpeg" alt="回忆照片二">
     </div>
     <div class="photo-window">
       <div class="window-bar"><span></span><span></span><span></span></div>
-      <img src="images/memory3.jpeg" alt="Memory 3">
+      <img src="images/memory3.jpeg" alt="回忆照片三">
     </div>
   </div>
 </section>
 
 <!-- SCREEN 9: Song For You -->
 <section id="screen-song" class="screen">
-  <div class="back-link" id="back-to-gifts-3">‹ back to gifts</div>
+  <div class="back-link" id="back-to-gifts-3">‹ 返回礼物</div>
   <div class="song-left">
     <div class="player-window">
       <div class="player-titlebar">
-        <span>♪ Now Playing</span>
+        <span>♪ 正在播放</span>
         <span class="dots"><span></span><span></span><span></span></span>
       </div>
       <div class="video-wrap">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/Fp8msa5uYsc?si=If9s5bFRBrsIwF06" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe id="yt-player" width="560" height="315" src="https://www.youtube.com/embed/FB5-rPa5wBA?enablejsapi=1&si=HBMq1nTTDh8IV35S" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
       <div class="player-controls">
         <div class="progress-bar"></div>
@@ -1002,14 +941,89 @@ html, body {
     </div>
   </div>
   <div class="song-right">
-    <h1 class="song-title">Song<br>For<br>You</h1>
+    <h1 class="song-title">情歌<br>献给<br>你</h1>
     <img class="pixel-pig-img" src="images/pixel-pig.png" alt="">
   </div>
 </section>
 
+<!-- YouTube iFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
 // ---------- CONFIG ----------
 const PIN_CODE = "5201";
+
+// ---------- BACKGROUND AUDIO & FLOATING BUTTON LOGIC ----------
+const bgm = document.getElementById('bgm-audio');
+const globalBgmBtn = document.getElementById('global-bgm-btn');
+bgm.volume = 0.2;
+
+function updateBgmButtonState() {
+  if (bgm.paused) {
+    globalBgmBtn.textContent = '▶';
+  } else {
+    globalBgmBtn.textContent = '❚❚';
+  }
+}
+
+function playBGM() {
+  if (bgm.paused) {
+    bgm.play().then(() => {
+      updateBgmButtonState();
+    }).catch(() => {
+      // Browsers block autoplay without prior interaction
+    });
+  }
+}
+
+function pauseBGM() {
+  bgm.pause();
+  updateBgmButtonState();
+}
+
+function toggleBGM() {
+  if (bgm.paused) {
+    playBGM();
+  } else {
+    pauseBGM();
+  }
+}
+
+// Click listener for the floating top-right button
+globalBgmBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  toggleBGM();
+});
+
+// Start BGM on first screen click interaction if paused
+window.addEventListener('click', () => {
+  if (bgm.paused && !songPlaying) {
+    playBGM();
+  }
+}, { once: true });
+
+// ---------- YOUTUBE API INTEGRATION ----------
+let player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('yt-player', {
+    events: {
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerStateChange(event) {
+  // YT.PlayerState.PLAYING === 1
+  if (event.data === 1) {
+    pauseBGM();
+    songPlaying = true;
+    playPauseBtn.textContent = '⏸';
+  } else if (event.data === 2 || event.data === 0) {
+    // YT.PlayerState.PAUSED === 2, YT.PlayerState.ENDED === 0
+    songPlaying = false;
+    playPauseBtn.textContent = '▶';
+  }
+}
 
 // ---------- SCREEN NAVIGATION ----------
 function showScreen(id) {
@@ -1022,7 +1036,7 @@ document.getElementById('screen-intro').addEventListener('click', () => {
   showScreen('screen-pincode');
 });
 
-typeText(document.getElementById('intro-text'), "Enjoy your birthday!!!!", 45);
+typeText(document.getElementById('intro-text'), "祝你生日快乐！！！", 45);
 
 function typeText(el, text, speed = 35) {
   el.textContent = "";
@@ -1063,10 +1077,9 @@ function checkPin() {
   } else {
     pinError.classList.add('show');
     setTimeout(() => {
-      showScreen('screen-welcome');
-      typeText(document.getElementById('welcome-title-text'), "HAPPY\nBIRTHDAY\nLOVE!", 50);
       resetPin();
-    }, 200);
+      pinError.classList.remove('show');
+    }, 600);
   }
 }
 
@@ -1096,7 +1109,10 @@ document.querySelectorAll('.key').forEach(key => {
 // ---------- START BUTTON ----------
 document.getElementById('start-btn').addEventListener('click', () => {
   showScreen('screen-chathead');
-  typeText(document.getElementById('chathead-text'), "hi love, i prepared this gift just for you", 45);
+  typeText(document.getElementById('chathead-text'), `宝贝，
+这份礼物
+是我特意为你准备的
+♡`, 45);
 });
 
 // ---------- CHATHEAD ----------
@@ -1128,12 +1144,12 @@ function openEnvelope() {
   setTimeout(() => {
     envelopeScreen.classList.add('opened');
     setTimeout(() => {
-      typeText(document.getElementById('letter-card-text'), "A letter for you", 60);
+      typeText(document.getElementById('letter-card-text'), "写给你的信", 60);
     }, 1000);
   }, 500);
 }
 
-// clicking the revealed "A letter for you" card moves to the full letter
+// clicking the revealed "写给你的信" card moves to the full letter
 letterCard.addEventListener('click', () => {
   if (envelopeScreen.classList.contains('opened')) {
     showLetter();
@@ -1141,10 +1157,27 @@ letterCard.addEventListener('click', () => {
 });
 
 // ---------- LETTER CONTENT ----------
-const LETTER_TEXT = "Happy birthday to someone who makes ordinary days feel like a celebration. I hope this little corner of the internet made you smile, even just a little. Here's to another year of inside jokes, quiet moments, and all the small things that somehow add up to everything. Thank you for being exactly who you are. I hope your day is as wonderful as you are.";
+const LETTER_TEXT = "生日快乐，我的男朋友🎂❤️<br><br>新的一岁，希望你平平安安，健健康康，每天都能开开心心，想做的事情都能顺顺利利。<br><br>我知道自己有时候没有给你足够的时间，也可能没有很好地陪着你。虽然我不是一个很会表达感情的人，但我想让你知道，我真的很喜欢你，也是真的很珍惜你。<br><br>也许我们之间没有那么多甜甜的话，有时候也会有一些不开心，但我还是想和你一起走下去。只要我们还在一起，我就愿意慢慢改变自己，也愿意努力让我们可以一直陪在彼此身边。<br><br>希望以后的日子里，我们可以一起经历更多的事情，一起去想去的地方，一起留下更多属于我们的回忆。<br><br>生日快乐呀❤️<br>希望你的新一岁有更多开心，也希望未来的每一年，我都还可以陪你过生日。🎂";
 
 function showLetter() {
-  typeText(document.getElementById('letter-text'), LETTER_TEXT, 25);
+  let i = 0;
+  const element = document.getElementById('letter-text');
+  element.innerHTML = "";
+  
+  function type() {
+    if (i < LETTER_TEXT.length) {
+      if (LETTER_TEXT.substring(i, i + 4) === "<br>") {
+        element.innerHTML += "<br>";
+        i += 4;
+      } else {
+        element.innerHTML += LETTER_TEXT.charAt(i);
+        i++;
+      }
+      setTimeout(type, 25);
+    }
+  }
+  
+  type();
   showScreen('screen-letter');
 }
 
@@ -1159,25 +1192,20 @@ document.getElementById('back-to-gifts-3').addEventListener('click', () => {
   pauseSong();
 });
 
-// ---------- SONG PLAYER ----------
-const ytPlayer = document.getElementById('yt-player');
+// ---------- SONG PLAYER CONTROLS ----------
 const playPauseBtn = document.getElementById('play-pause-btn');
 let songPlaying = false;
 
-function postToPlayer(func) {
-  ytPlayer.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
-}
-
 function playSong() {
-  postToPlayer('playVideo');
-  songPlaying = true;
-  playPauseBtn.textContent = '⏸';
+  if (player && typeof player.playVideo === 'function') {
+    player.playVideo();
+  }
 }
 
 function pauseSong() {
-  postToPlayer('pauseVideo');
-  songPlaying = false;
-  playPauseBtn.textContent = '▶';
+  if (player && typeof player.pauseVideo === 'function') {
+    player.pauseVideo();
+  }
 }
 
 playPauseBtn.addEventListener('click', () => {
