@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<!--
+  BIRTHDAY GIFT SITE — customization guide
+
+  1. Pincode: change PIN_CODE near the top of the <script> section (currently "1111").
+  2. Giftbox images: replace images/gift-letter.png, gift-memories.png, gift-song.png
+     with your own pictures (keep the same filenames, or update the src in the HTML).
+  3. Memory photos: replace images/memory1.jpeg, memory2.jpeg, memory3.jpeg.
+  4. Letter wish text: edit the LETTER_TEXT constant in the <script> section.
+  5. Song: replace the video ID "dQw4w9WgXcQ" in the iframe src (screen-song section)
+     with your own YouTube video ID.
+  6. Character sprites: the girl/boy figures are drawn with CSS (.pixel-girl, .pixel-boy).
+     Swap these for <img> tags if you want to use exact character art instead.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Gift For You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+:root {
+  --purple-deep: #6b5b9a;
+  --purple-mid: #8b7bb8;
+  --pink-hot: #ff6fa5;
+  --pink-soft: #ffb8d9;
+  --pink-pale: #ffd9e8;
+  --peach: #ffb894;
+  --cream: #fff5e8;
+  --ink: #4a3b6b;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Press Start 2P', monospace;
+  background: #1a1330;
+}
+
+.sky {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, #5b4b8a 0%, #8b6bb0 30%, #d982a8 60%, #ffab8a 100%);
+  z-index: 0;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 20% 15%, #fff 100%, transparent),
+    radial-gradient(2px 2px at 60% 10%, #fff 100%, transparent),
+    radial-gradient(3px 3px at 85% 20%, #fff 100%, transparent),
+    radial-gradient(2px 2px at 40% 30%, #fff 100%, transparent),
+    radial-gradient(2px 2px at 75% 40%, #fff 100%, transparent),
+    radial-gradient(3px 3px at 10% 45%, #fff 100%, transparent);
+  opacity: 0.9;
+}
+
+.clouds-bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 35%;
+  background:
+    radial-gradient(ellipse 120px 40px at 15% 100%, #fff 60%, transparent 61%),
+    radial-gradient(ellipse 160px 50px at 50% 100%, #fff 60%, transparent 61%),
+    radial-gradient(ellipse 140px 45px at 85% 100%, #fff 60%, transparent 61%);
+  opacity: 0.85;
+}
+
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* ---------- SCREEN 1: INTRO ---------- */
+#screen-intro {
+  flex-direction: row;
+  gap: 40px;
+  padding: 0 8vw;
+}
+
+.cloud-platform {
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  width: 220px;
+  height: 60px;
+  background:
+    radial-gradient(ellipse 60px 25px at 20% 100%, #fff 60%, transparent 61%),
+    radial-gradient(ellipse 80px 30px at 55% 100%, #fff 60%, transparent 61%),
+    radial-gradient(ellipse 60px 25px at 90% 100%, #fff 60%, transparent 61%);
+}
+
+.character {
+  position: relative;
+  z-index: 2;
+  animation: bob 2.4s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.pixel-girl {
+  width: 110px;
+  height: 160px;
+  position: relative;
+}
+
+.pixel-girl::before {
+  /* hair */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 5px;
+  width: 100px;
+  height: 75px;
+  background: #2b2233;
+  border-radius: 50% 50% 20% 20% / 60% 60% 10% 10%;
+}
+
+.pixel-girl::after {
+  /* body/coat */
+  content: "";
+  position: absolute;
+  top: 68px;
+  left: 12px;
+  width: 86px;
+  height: 92px;
+  background: #f5f1ea;
+  border-radius: 10px 10px 6px 6px;
+  box-shadow: inset 0 0 0 4px #e0d9cc;
+}
+
+.pixel-boy {
+  width: 110px;
+  height: 160px;
+  position: relative;
+}
+
+.pixel-boy::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10px;
+  width: 90px;
+  height: 55px;
+  background: #4a3324;
+  border-radius: 50% 50% 30% 30% / 70% 70% 20% 20%;
+}
+
+.pixel-boy::after {
+  content: "";
+  position: absolute;
+  top: 50px;
+  left: 15px;
+  width: 80px;
+  height: 110px;
+  background: #2e2a45;
+  border-radius: 8px 8px 4px 4px;
+}
+
+.character-pair {
+  display: flex;
+  align-items: flex-end;
+  gap: -10px;
+}
+.character-pair .pixel-boy { margin-right: -20px; }
+
+.speech-bubble {
+  position: relative;
+  background: #fff;
+  border: 5px solid var(--pink-soft);
+  border-radius: 18px;
+  padding: 28px 34px;
+  max-width: 360px;
+  z-index: 2;
+}
+
+.speech-bubble::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  bottom: 30px;
+  width: 0;
+  height: 0;
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-right: 22px solid var(--pink-soft);
+}
+
+.speech-bubble p {
+  color: var(--pink-hot);
+  font-size: 20px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ---------- SCREEN 2: PINCODE ---------- */
+#screen-pincode {
+  flex-direction: row;
+}
+
+.pincode-left {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cloud-platform.small {
+  bottom: 25%;
+  width: 180px;
+}
+
+.character-pair {
+  position: relative;
+  z-index: 2;
+}
+
+.pincode-right {
+  flex: 1;
+  height: 100%;
+  background: var(--pink-pale);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  padding: 20px;
+}
+
+.pin-title {
+  color: #8a5a7a;
+  font-size: 22px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.pin-dots {
+  display: flex;
+  gap: 14px;
+}
+
+.pin-dot {
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--pink-hot);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--pink-hot);
+  border-radius: 6px;
+}
+
+.pin-dot.filled::before {
+  content: "★";
+}
+
+.pin-error {
+  color: #d63868;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  text-align: center;
+}
+.pin-error.show {
+  opacity: 1;
+  animation: shake 0.35s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  grid-gap: 12px;
+}
+
+.key {
+  width: 70px;
+  height: 70px;
+  border: none;
+  cursor: pointer;
+  background:
+    linear-gradient(180deg, var(--pink-hot), #e0508a);
+  clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 70% 100%, 30% 100%, 0% 60%, 10% 20%);
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+.key:active {
+  transform: scale(0.9);
+}
+
+.key-clear, .key-back {
+  background: linear-gradient(180deg, #ffc3dc, #ffa9cb);
+  font-size: 20px;
+}
+
+/* ---------- SCREEN 3: HAPPY BIRTHDAY LOVE ---------- */
+#screen-welcome {
+  flex-direction: row;
+  gap: 60px;
+  padding: 0 8vw;
+}
+
+.hearts-row {
+  position: absolute;
+  top: 6%;
+  left: 6%;
+  display: flex;
+  gap: 10px;
+  font-size: 26px;
+  color: var(--pink-hot);
+}
+
+.welcome-card {
+  position: relative;
+  background: rgba(180, 90, 140, 0.55);
+  border-radius: 24px;
+  padding: 40px 34px;
+  display: flex;
+  align-items: flex-end;
+  gap: -10px;
+  z-index: 2;
+}
+
+.welcome-card .character-pair {
+  animation: bob 2.4s ease-in-out infinite;
+}
+
+.floating-heart {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  color: #ffdce9;
+  animation: floatHeart 2s ease-in-out infinite;
+}
+
+@keyframes floatHeart {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -10px); }
+}
+
+.welcome-title {
+  color: var(--pink-hot);
+  font-size: 34px;
+  text-align: center;
+  line-height: 1.6;
+  text-shadow: 3px 3px 0 var(--purple-deep);
+  z-index: 2;
+}
+
+.start-btn {
+  margin-top: 24px;
+  background: linear-gradient(180deg, #a78bd9, #7b5fc7);
+  border: 4px solid #5b3fa0;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 18px;
+  padding: 14px 36px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #4a2f85;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.start-btn:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #4a2f85;
+}
+
+.welcome-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------- SCREEN 4: CHATHEAD ---------- */
+#screen-chathead {
+  flex-direction: row;
+  gap: 40px;
+  padding: 0 8vw;
+  cursor: pointer;
+}
+
+.next-arrow {
+  position: absolute;
+  top: 6%;
+  right: 6%;
+  width: 0;
+  height: 0;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+  border-left: 26px solid var(--pink-hot);
+  filter: drop-shadow(2px 2px 0 var(--purple-deep));
+  animation: pulseArrow 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseArrow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+}
+
+/* ---------- SCREEN 5: GIFT SELECTION ---------- */
+#screen-gifts {
+  flex-direction: column;
+  gap: 60px;
+}
+
+.gifts-title {
+  color: var(--pink-hot);
+  font-size: 32px;
+  text-align: center;
+  line-height: 1.6;
+  text-shadow: 3px 3px 0 var(--purple-deep);
+  z-index: 2;
+}
+
+.gift-row {
+  display: flex;
+  gap: 60px;
+  z-index: 2;
+}
+
+.giftbox {
+  width: 130px;
+  cursor: pointer;
+  animation: giftBob 1.8s ease-in-out infinite;
+  transition: transform 0.15s;
+}
+
+.giftbox:nth-child(2) { animation-delay: 0.2s; }
+.giftbox:nth-child(3) { animation-delay: 0.4s; }
+
+.giftbox:hover {
+  transform: scale(1.08);
+}
+
+@keyframes giftBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.giftbox img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.gift-label {
+  text-align: center;
+  color: #fff;
+  font-size: 10px;
+  margin-top: 14px;
+  text-shadow: 2px 2px 0 var(--purple-deep);
+}
+
+/* ---------- SCREEN 6: ENVELOPE OPENING ---------- */
+#screen-envelope {
+  background: #ff5f96;
+  overflow: hidden;
+}
+
+.envelope-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flap-bottom-left,
+.flap-bottom-right {
+  position: absolute;
+  bottom: 0;
+  width: 55%;
+  height: 60%;
+  background: #e0447f;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.9s;
+}
+.flap-bottom-left {
+  left: 0;
+  clip-path: polygon(0 100%, 0 0, 100% 100%);
+}
+.flap-bottom-right {
+  right: 0;
+  clip-path: polygon(100% 100%, 100% 0, 0 100%);
+}
+#screen-envelope.opened .flap-bottom-left,
+#screen-envelope.opened .flap-bottom-right {
+  opacity: 1;
+}
+
+.heart-seal {
+  position: relative;
+  width: 220px;
+  height: 200px;
+  z-index: 5;
+  transition: transform 1s cubic-bezier(.4,1.6,.5,1), top 1s cubic-bezier(.4,1.6,.5,1);
+}
+.heart-seal::before,
+.heart-seal::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 110px;
+  height: 170px;
+  background: #b53564;
+  border-radius: 60px 60px 0 0;
+}
+.heart-seal::before { left: 110px; transform: rotate(-45deg); transform-origin: 0 100%; }
+.heart-seal::after { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
+
+#screen-envelope.opened .heart-seal {
+  transform: scale(0.4) translateY(-190px);
+}
+
+.letter-card {
+  position: absolute;
+  width: 78%;
+  max-width: 420px;
+  height: 62%;
+  background: #d9c6a3;
+  border: 6px solid #a98a5e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease 1s, transform 0.6s ease 1s;
+  cursor: pointer;
+}
+
+#screen-envelope.opened .letter-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.letter-card p {
+  color: #4a3324;
+  font-size: 22px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* ---------- SCREEN 7: LETTER CONTENT ---------- */
+#screen-letter {
+  padding: 6vh 8vw;
+}
+
+.letter-page {
+  background: #d9c6a3;
+  border: 6px solid #a98a5e;
+  max-width: 640px;
+  width: 100%;
+  padding: 40px 36px;
+  position: relative;
+}
+
+.letter-page p {
+  color: #4a3324;
+  font-size: 15px;
+  line-height: 2;
+  text-align: left;
+}
+
+.back-link {
+  position: absolute;
+  top: 6%;
+  left: 6%;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  text-shadow: 2px 2px 0 var(--purple-deep);
+  z-index: 3;
+}
+
+/* ---------- SCREEN 8: PHOTO MEMORIES ---------- */
+#screen-photos {
+  flex-direction: column;
+  gap: 40px;
+}
+
+.photos-title {
+  color: var(--pink-hot);
+  font-size: 26px;
+  text-align: center;
+  text-shadow: 3px 3px 0 var(--purple-deep);
+  z-index: 2;
+}
+
+.photos-row {
+  display: flex;
+  gap: 26px;
+  z-index: 2;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 6vw;
+}
+
+.photo-window {
+  width: 220px;
+  background: #fff;
+  border: 4px solid var(--ink);
+}
+
+.photo-window .window-bar {
+  background: var(--pink-soft);
+  border-bottom: 4px solid var(--ink);
+  padding: 5px 8px;
+  display: flex;
+  gap: 5px;
+}
+
+.photo-window .window-bar span {
+  width: 10px;
+  height: 10px;
+  background: var(--ink);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.photo-window img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- SCREEN 9: SONG FOR YOU ---------- */
+#screen-song {
+  flex-direction: column;
+  gap: 30px;
+}
+
+.song-title {
+  color: var(--pink-hot);
+  font-size: 28px;
+  text-align: center;
+  text-shadow: 3px 3px 0 var(--purple-deep);
+  z-index: 2;
+}
+
+.player-window {
+  width: 92%;
+  max-width: 460px;
+  background: #cdb8e8;
+  border: 5px solid #6b4f9e;
+  z-index: 2;
+}
+
+.player-titlebar {
+  background: #a78bd9;
+  border-bottom: 4px solid #6b4f9e;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #3a2a5e;
+  font-size: 11px;
+}
+
+.player-titlebar .dots span {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: #3a2a5e;
+  margin-left: 5px;
+}
+
+.video-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: #000;
+  border-bottom: 4px solid #6b4f9e;
+}
+
+.video-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.player-controls {
+  padding: 16px 18px 20px;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #8f72c2;
+  border-radius: 3px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.progress-bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -4px;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  border: 3px solid #6b4f9e;
+}
+
+.player-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.player-buttons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #3a2a5e;
+  font-size: 18px;
+}
+
+.player-buttons .play-pause {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #6b4f9e;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  #screen-intro, #screen-pincode, #screen-welcome, #screen-chathead {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .pincode-left { flex: 0 0 40%; }
+  .pincode-right { flex: 1; width: 100%; }
+  .speech-bubble { max-width: 80vw; }
+  .keypad { grid-template-columns: repeat(3, 60px); }
+  .key { width: 60px; height: 60px; font-size: 16px; }
+  .welcome-title { font-size: 24px; }
+  .gift-row { gap: 30px; }
+  .gifts-title { font-size: 22px; }
+  .giftbox { width: 90px; }
+  .letter-page p { font-size: 13px; }
+  .letter-card p { font-size: 16px; }
+  .heart-seal { width: 150px; height: 130px; }
+  .photo-window { width: 42vw; }
+  .photo-window img { height: 42vw; }
+  .photos-title { font-size: 18px; }
+  .song-title { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sky">
+  <div class="stars"></div>
+  <div class="clouds-bg"></div>
+</div>
+
+<!-- SCREEN 1: Intro -->
+<section id="screen-intro" class="screen active">
+  <div class="cloud-platform"></div>
+  <div class="character">
+    <img class="pixel-girl-img" src="images/pixel-girl.png" alt="">
+  </div>
+  <div class="speech-bubble">
+    <p>Enjoy your birthday!!!!</p>
+  </div>
+</section>
+
+<!-- SCREEN 2: Pincode -->
+<!-- SCREEN 2: Pincode -->
+<section id="screen-pincode" class="screen">
+  <div class="pincode-left">
+    <div class="cloud-platform small"></div>
+    <img class="couple-img" src="images/pixel-couple.png" alt="">
+  </div>
+  <div class="pincode-right">
+    <h1 class="pin-title">Guess the<br>password</h1>
+    <div class="pin-dots">
+      <div class="pin-dot" data-index="0"></div>
+      <div class="pin-dot" data-index="1"></div>
+      <div class="pin-dot" data-index="2"></div>
+      <div class="pin-dot" data-index="3"></div>
+    </div>
+    <div class="pin-error" id="pin-error">Wrong password, try again!</div>
+    <div class="keypad">
+      <button class="key" data-key="1">1</button>
+      <button class="key" data-key="2">2</button>
+      <button class="key" data-key="3">3</button>
+      <button class="key" data-key="4">4</button>
+      <button class="key" data-key="5">5</button>
+      <button class="key" data-key="6">6</button>
+      <button class="key" data-key="7">7</button>
+      <button class="key" data-key="8">8</button>
+      <button class="key" data-key="9">9</button>
+      <button class="key key-clear" data-key="clear">*</button>
+      <button class="key" data-key="0">0</button>
+      <button class="key key-back" data-key="back">#</button>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 3: Happy Birthday Love -->
+<section id="screen-welcome" class="screen">
+  <div class="hearts-row">
+    <span>♥</span><span>♥</span><span>♥</span>
+  </div>
+  <div class="welcome-col">
+    <div class="welcome-card">
+      <div class="floating-heart">♥</div>
+      <div class="character-pair">
+        <img class="couple-img" src="images/pixel-couple.png" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="welcome-col">
+    <h1 class="welcome-title">HAPPY<br>BIRTHDAY<br>LOVE!</h1>
+    <button class="start-btn" id="start-btn">START</button>
+  </div>
+</section>
+
+<!-- SCREEN 4: Chathead -->
+<section id="screen-chathead" class="screen">
+  <div class="next-arrow"></div>
+  <div class="cloud-platform"></div>
+  <div class="character">
+    <img class="pixel-girl-img" src="images/pixel-girl.png" alt="">
+  </div>
+  <div class="speech-bubble">
+    <p>hi love, i prepared this gift just for you</p>
+  </div>
+</section>
+
+<!-- SCREEN 5: Gift Selection -->
+<section id="screen-gifts" class="screen">
+  <h1 class="gifts-title">Choose Your<br>Gifts</h1>
+  <div class="gift-row">
+    <div class="gift-col">
+      <div class="giftbox" data-gift="letter">
+        <img src="images/giftbox.png" alt="A letter gift box">
+      </div>
+      <div class="gift-label">A Letter</div>
+    </div>
+    <div class="gift-col">
+      <div class="giftbox" data-gift="photos">
+        <img src="images/giftbox.png" alt="Photo memories gift box">
+      </div>
+      <div class="gift-label">Memories</div>
+    </div>
+    <div class="gift-col">
+      <div class="giftbox" data-gift="song">
+        <img src="images/giftbox.png" alt="A song gift box">
+      </div>
+      <div class="gift-label">A Song</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 6: Envelope Opening -->
+<section id="screen-envelope" class="screen">
+  <div class="envelope-stage">
+    <div class="flap-bottom-left"></div>
+    <div class="flap-bottom-right"></div>
+    <div class="letter-card" id="letter-card">
+      <p>A letter for you</p>
+    </div>
+    <div class="heart-seal" id="heart-seal"></div>
+  </div>
+</section>
+
+<!-- SCREEN 7: Letter Content -->
+<section id="screen-letter" class="screen">
+  <div class="back-link" id="back-to-gifts">‹ back to gifts</div>
+  <div class="letter-page">
+    <p id="letter-text"></p>
+  </div>
+</section>
+
+<!-- SCREEN 8: Photo Memories -->
+<section id="screen-photos" class="screen">
+  <div class="back-link" id="back-to-gifts-2">‹ back to gifts</div>
+  <h1 class="photos-title">Our Memories</h1>
+  <div class="photos-row">
+    <div class="photo-window">
+      <div class="window-bar"><span></span><span></span><span></span></div>
+      <img src="images/memory1.jpeg" alt="Memory 1">
+    </div>
+    <div class="photo-window">
+      <div class="window-bar"><span></span><span></span><span></span></div>
+      <img src="images/memory2.jpeg" alt="Memory 2">
+    </div>
+    <div class="photo-window">
+      <div class="window-bar"><span></span><span></span><span></span></div>
+      <img src="images/memory3.jpeg" alt="Memory 3">
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 9: Song For You -->
+<section id="screen-song" class="screen">
+  <div class="back-link" id="back-to-gifts-3">‹ back to gifts</div>
+  <h1 class="song-title">Song For You</h1>
+  <div class="player-window">
+    <div class="player-titlebar">
+      <span>♪ Now Playing</span>
+      <span class="dots"><span></span><span></span><span></span></span>
+    </div>
+    <div class="video-wrap">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/Fp8msa5uYsc?si=If9s5bFRBrsIwF06" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <div class="player-controls">
+      <div class="progress-bar"></div>
+      <div class="player-buttons">
+        <button id="shuffle-btn">⇄</button>
+        <button id="prev-btn">⏮</button>
+        <button class="play-pause" id="play-pause-btn">▶</button>
+        <button id="next-btn">⏭</button>
+        <button id="loop-btn">↻</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ---------- CONFIG ----------
+const PIN_CODE = "1111";
+
+// ---------- SCREEN NAVIGATION ----------
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// Click anywhere on intro screen to move to pincode
+document.getElementById('screen-intro').addEventListener('click', () => {
+  showScreen('screen-pincode');
+});
+
+// ---------- PINCODE LOGIC ----------
+let enteredPin = "";
+const pinDots = document.querySelectorAll('.pin-dot');
+const pinError = document.getElementById('pin-error');
+
+function updateDots() {
+  pinDots.forEach((dot, i) => {
+    dot.classList.toggle('filled', i < enteredPin.length);
+  });
+}
+
+function resetPin() {
+  enteredPin = "";
+  updateDots();
+}
+
+function checkPin() {
+  if (enteredPin === PIN_CODE) {
+    pinError.classList.remove('show');
+    setTimeout(() => {
+      showScreen('screen-welcome');
+      resetPin();
+    }, 200);
+  } else {
+    pinError.classList.add('show');
+    setTimeout(() => {
+      resetPin();
+      pinError.classList.remove('show');
+    }, 600);
+  }
+}
+
+document.querySelectorAll('.key').forEach(key => {
+  key.addEventListener('click', () => {
+    const value = key.dataset.key;
+
+    if (value === 'clear') {
+      resetPin();
+      return;
+    }
+    if (value === 'back') {
+      enteredPin = enteredPin.slice(0, -1);
+      updateDots();
+      return;
+    }
+    if (enteredPin.length < 4) {
+      enteredPin += value;
+      updateDots();
+    }
+    if (enteredPin.length === 4) {
+      checkPin();
+    }
+  });
+});
+
+// ---------- START BUTTON ----------
+document.getElementById('start-btn').addEventListener('click', () => {
+  showScreen('screen-chathead');
+});
+
+// ---------- CHATHEAD ----------
+document.getElementById('screen-chathead').addEventListener('click', () => {
+  showScreen('screen-gifts');
+});
+
+// ---------- GIFT SELECTION ----------
+document.querySelectorAll('.giftbox').forEach(box => {
+  box.addEventListener('click', () => {
+    const gift = box.dataset.gift;
+    if (gift === 'letter') {
+      openEnvelope();
+    } else if (gift === 'photos') {
+      showScreen('screen-photos');
+    } else if (gift === 'song') {
+      showScreen('screen-song');
+    }
+  });
+});
+
+// ---------- ENVELOPE OPENING ANIMATION ----------
+const envelopeScreen = document.getElementById('screen-envelope');
+const letterCard = document.getElementById('letter-card');
+
+function openEnvelope() {
+  envelopeScreen.classList.remove('opened');
+  showScreen('screen-envelope');
+  // trigger opening animation shortly after the screen is shown
+  setTimeout(() => {
+    envelopeScreen.classList.add('opened');
+  }, 500);
+}
+
+// clicking the revealed "A letter for you" card moves to the full letter
+letterCard.addEventListener('click', () => {
+  if (envelopeScreen.classList.contains('opened')) {
+    showLetter();
+  }
+});
+
+// ---------- LETTER CONTENT ----------
+const LETTER_TEXT = "Happy birthday to someone who makes ordinary days feel like a celebration. I hope this little corner of the internet made you smile, even just a little. Here's to another year of inside jokes, quiet moments, and all the small things that somehow add up to everything. Thank you for being exactly who you are. I hope your day is as wonderful as you are.";
+
+function showLetter() {
+  document.getElementById('letter-text').textContent = LETTER_TEXT;
+  showScreen('screen-letter');
+}
+
+document.getElementById('back-to-gifts').addEventListener('click', () => {
+  showScreen('screen-gifts');
+});
+document.getElementById('back-to-gifts-2').addEventListener('click', () => {
+  showScreen('screen-gifts');
+});
+document.getElementById('back-to-gifts-3').addEventListener('click', () => {
+  showScreen('screen-gifts');
+  pauseSong();
+});
+
+// ---------- SONG PLAYER ----------
+const ytPlayer = document.getElementById('yt-player');
+const playPauseBtn = document.getElementById('play-pause-btn');
+let songPlaying = false;
+
+function postToPlayer(func) {
+  ytPlayer.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
+}
+
+function playSong() {
+  postToPlayer('playVideo');
+  songPlaying = true;
+  playPauseBtn.textContent = '⏸';
+}
+
+function pauseSong() {
+  postToPlayer('pauseVideo');
+  songPlaying = false;
+  playPauseBtn.textContent = '▶';
+}
+
+playPauseBtn.addEventListener('click', () => {
+  songPlaying ? pauseSong() : playSong();
+});
+</script>
+</body>
+</html>
