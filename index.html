@@ -786,7 +786,7 @@ html, body {
   .speech-bubble { max-width: 80vw; }
   .keypad { grid-template-columns: repeat(3, 60px); }
   .key { width: 60px; height: 60px; font-size: 16px; }
-  .welcome-title { font-size: 24px; }
+  .welcome-title { white-space: pre-line; font-size: 24px; }
   .gift-row { gap: 30px; }
   .gifts-title { font-size: 22px; }
   .giftbox { width: 90px; }
@@ -814,7 +814,7 @@ html, body {
     <img class="pixel-girl-img" src="images/pixel-girl.png" alt="">
   </div>
   <div class="speech-bubble">
-    <p>Enjoy your birthday!!!!</p>
+    <p id="intro-text">Enjoy your birthday!!!!</p>
   </div>
 </section>
 
@@ -865,7 +865,7 @@ html, body {
     </div>
   </div>
   <div class="welcome-col">
-    <h1 class="welcome-title">HAPPY<br>BIRTHDAY<br>LOVE!</h1>
+    <h1 class="welcome-title" id="welcome-title-text">HAPPY<br>BIRTHDAY<br>LOVE!</h1>
     <button class="start-btn" id="start-btn">START</button>
   </div>
 </section>
@@ -878,7 +878,7 @@ html, body {
     <img class="pixel-girl-img" src="images/pixel-girl.png" alt="">
   </div>
   <div class="speech-bubble">
-    <p>hi love, i prepared this gift just for you</p>
+    <p id="chathead-text">hi love, i prepared this gift just for you</p>
   </div>
 </section>
 
@@ -987,6 +987,8 @@ document.getElementById('screen-intro').addEventListener('click', () => {
   showScreen('screen-pincode');
 });
 
+typeText(document.getElementById('intro-text'), "Enjoy your birthday!!!!", 45);
+
 function typeText(el, text, speed = 35) {
   el.textContent = "";
   let i = 0;
@@ -1026,9 +1028,10 @@ function checkPin() {
   } else {
     pinError.classList.add('show');
     setTimeout(() => {
+      showScreen('screen-welcome');
+      typeText(document.getElementById('welcome-title-text'), "HAPPY\nBIRTHDAY\nLOVE!", 50);
       resetPin();
-      pinError.classList.remove('show');
-    }, 600);
+    }, 200);
   }
 }
 
@@ -1058,6 +1061,7 @@ document.querySelectorAll('.key').forEach(key => {
 // ---------- START BUTTON ----------
 document.getElementById('start-btn').addEventListener('click', () => {
   showScreen('screen-chathead');
+  typeText(document.getElementById('chathead-text'), "hi love, i prepared this gift just for you", 45);
 });
 
 // ---------- CHATHEAD ----------
