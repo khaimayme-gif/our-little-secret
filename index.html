@@ -913,7 +913,7 @@ html, body {
     <div class="flap-bottom-left"></div>
     <div class="flap-bottom-right"></div>
     <div class="letter-card" id="letter-card">
-      <p>A letter for you</p>
+      <p id="letter-card-text">A letter for you</p>
     </div>
     <div class="heart-seal" id="heart-seal"></div>
   </div>
@@ -986,6 +986,19 @@ function showScreen(id) {
 document.getElementById('screen-intro').addEventListener('click', () => {
   showScreen('screen-pincode');
 });
+
+function typeText(el, text, speed = 35) {
+  el.textContent = "";
+  let i = 0;
+  function step() {
+    if (i < text.length) {
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(step, speed);
+    }
+  }
+  step();
+}
 
 // ---------- PINCODE LOGIC ----------
 let enteredPin = "";
@@ -1073,9 +1086,11 @@ const letterCard = document.getElementById('letter-card');
 function openEnvelope() {
   envelopeScreen.classList.remove('opened');
   showScreen('screen-envelope');
-  // trigger opening animation shortly after the screen is shown
   setTimeout(() => {
     envelopeScreen.classList.add('opened');
+    setTimeout(() => {
+      typeText(document.getElementById('letter-card-text'), "A letter for you", 60);
+    }, 1000);
   }, 500);
 }
 
@@ -1090,7 +1105,7 @@ letterCard.addEventListener('click', () => {
 const LETTER_TEXT = "Happy birthday to someone who makes ordinary days feel like a celebration. I hope this little corner of the internet made you smile, even just a little. Here's to another year of inside jokes, quiet moments, and all the small things that somehow add up to everything. Thank you for being exactly who you are. I hope your day is as wonderful as you are.";
 
 function showLetter() {
-  document.getElementById('letter-text').textContent = LETTER_TEXT;
+  typeText(document.getElementById('letter-text'), LETTER_TEXT, 25);
   showScreen('screen-letter');
 }
 
