@@ -736,7 +736,7 @@ html, body {
 
 /* Responsive */
 @media (max-width: 700px) {
-  #screen-intro, #screen-pincode, #screen-welcome, #screen-chathead {
+  #screen-intro, #screen-pincode, #screen-welcome, #screen-chathead, #screen-song {
     flex-direction: column;
     gap: 20px;
   }
@@ -755,8 +755,12 @@ html, body {
   .photo-window { width: 42vw; }
   .photo-window img { height: 42vw; }
   .photos-title { font-size: 18px; }
-  .song-title { font-size: 20px; }
-  .song-left { flex-basis: 100%; }
+  .song-title { font-size: 22px; line-height: 1.4; }
+  #screen-song { padding: 16px 6vw; overflow-y: auto; }
+  .song-left { flex-basis: auto; width: 100%; }
+  .song-right { gap: 12px; }
+  .pixel-pig-img { width: 90px; }
+  .player-window { width: 100%; }
   .floating-audio-control { top: 10px; right: 10px; }
   .floating-audio-btn { width: 38px; height: 38px; font-size: 14px; }
 }
